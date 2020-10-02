@@ -1,0 +1,4 @@
+name: graphql_handler
+dependencies:
+  graphql_parser: ^1.1.4
+  graphql_schema: ^1.0.4

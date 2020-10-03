@@ -1,4 +1,6 @@
-import "package:graphql_parser/graphql_parser.dart";
+import 'entry.dart';
+import 'event_bus.dart';
+import 'handlers/user_handler.dart';
 
 void main() {
     final String graphqlString = '''
@@ -8,19 +10,14 @@ void main() {
         }
     }
     ''';
-    final stopwatch = new Stopwatch();
 
-    stopwatch.start();
+    final eventBus = new EventBus();
+    final entry = new Entry(eventBus);
 
-    final tokens = scan(graphqlString);
-    final parser = new Parser(tokens);
-    final doc = parser.parseDocument();
+    eventBus.on("no-handler", (handlerName) => {
+        print("Query handler $handlerName not found")
+    });
 
-    final OperationDefinitionContext operation = doc.definitions.first;
-    final field = operation.selectionSet.selections.first.field;
-
-    stopwatch.stop();
-
-    print("Parse time: ${stopwatch.elapsedMilliseconds}ms");
-    print(field.fieldName.name);
+    entry.registerHandler(new UserHandler());
+    entry.execute(graphqlString);
 }

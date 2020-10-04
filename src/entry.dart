@@ -33,6 +33,7 @@ class Entry {
                 final name = field.name;
 
                 if (this._handlers.containsKey(name)) {
+                    this._handlers[name].registerSelections(selection.field.selectionSet.selections);
                     this._handlers[name].run();
                 } else {
                     this._noHandler(name);
